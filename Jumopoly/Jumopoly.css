@@ -1,0 +1,10 @@
+
+.flippable {
+width: 40px;
+height: 70px;
+background-color: burlywood;
+}
+
+.flippable.flipped {
+background-color: brown;
+}
