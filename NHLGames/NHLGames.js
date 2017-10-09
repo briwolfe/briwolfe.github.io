@@ -1,6 +1,7 @@
-﻿// NHL REQUIRED FUNCTIONS
-// NHL returns these as functions, so we have to use them, as far as I can tell
-// everytime we call an nhl function, we increment ajaxCallsOustanding
+﻿nhlApiUrl = "https://statsapi.web.nhl.com"
+
+
+// everytime we call a function, we increment ajaxCallsOustanding
 // and here, when we get them back, we decrement
 // this serves to make sure we're not updating every time we get something back
 
@@ -11,16 +12,13 @@ var loadScoreboard = function(nhlReturnVal)
     if (ajaxCallsOutstanding == 0)
         printGoodGames();
 }
-var GCBX = [];
-GCBX.load = function (nhlReturnVal) {
+
+var loadGame = function (nhlReturnVal) {
     ajaxCallsOutstanding--;
     isCloseGame(nhlReturnVal);
     if (ajaxCallsOutstanding == 0)
         printGoodGames();
 }
-
-// END NHL REQUIRED FUNCTIONS
-
 
 Date.prototype.toDateInputValue = (function () {
     var local = new Date(this);
@@ -42,53 +40,25 @@ var getGames = function ()
     $("#goodGamesList").empty();
     ajaxCallsOutstanding = 0;
     goodGames = [];
-    //var requestedDay = new Date();
-    //var year = requestedDay.getFullYear();
-    //var month = requestedDay.getMonth();
-    //if (month < 10) month = "0" + (month + 1)
-    //else month = month + 1;
-    //var date = requestedDay.getDate();
-    //var ymd = year + "-" + month + "-" + date;
     var ymd = $('#datePicker').val();
     if (ymd == "")
         setErrorMessage("Please select a valid date.");
-    $.ajax({
-        type: "POST",
-        dataType: "jsonp",
-        url: "http:////live.nhle.com//GameData//GCScoreboard//" + ymd + ".jsonp",
-        error: function (jqXHR, exception) {
-            var msg = '';
-            if (jqXHR.status === 200) {
-                return;
-            } else if (jqXHR.status === 0) {
-                msg = 'Not connect.\n Verify Network.';
-            } else if (jqXHR.status == 404) {
-                msg = 'Unable to complete request. Please check date.';
-            } else if (jqXHR.status == 500) {
-                msg = 'Internal Server Error [500].';
-            }
-            setErrorMessage(msg);
-        },
-    })
-    ajaxCallsOutstanding++;
+    ajaxURL = nhlApiUrl + "/api/v1/schedule?date=" + ymd;
+    doAjaxCall(ajaxURL, loadScoreboard);
     
 }
 
-// REQUIRED!!! nhl returns this as function, so we use it
 var parseGames = function(nhlReturnVal)
 {
     allGames = nhlReturnVal;
-    if (allGames == undefined || allGames.games == undefined)
-    {
+    if (allGames == undefined || allGames.dates == undefined || allGames.dates[0] == undefined || allGames.dates[0].games == undefined) {
         setErrorMessage("Unable to parse result.");
     }
-    else if (allGames.games.length == 0)
-    {
+    else if (allGames.dates[0].games.length == 0) {
         setErrorMessage("No games scheduled on selected date.")
     }
-    else
-    {
-        findGoodGames(allGames.games);
+    else {
+        findGoodGames(allGames.dates[0].games);
     }
 }
 
@@ -97,10 +67,11 @@ var findGoodGames = function(theGames)
     goodGames = [];
     var noneFinished = true;
     theGames.forEach(function (eachGame) {
-        if (isAGoodGame(eachGame))
-            goodGames.push(eachGame);
-        if (eachGame.bs.substr(0,5) == "FINAL")
+        if (isFinal(eachGame))
+        {
             noneFinished = false;
+            getGameData(eachGame);
+        }
     });
 
     if (noneFinished)
@@ -109,18 +80,9 @@ var findGoodGames = function(theGames)
     }
 }
 
-var isAGoodGame = function(hockeyGame)
+var isFinal = function(hockeyGame)
 {
-    if (isOvertimeGame(hockeyGame))
-        return true;
-    else 
-        getGameData(hockeyGame);
-    return false;
-}
-
-var isOvertimeGame = function(hockeyGame)
-{
-    if (hockeyGame.bs == "FINAL OT" || hockeyGame.bs == "FINAL SO")
+    if (hockeyGame.status.statusCode == 7)
         return true;
     else
         return false;
@@ -129,86 +91,59 @@ var isOvertimeGame = function(hockeyGame)
 
 var getGameData = function (hockeyGame)
 {
-    if (hockeyGame.bs.substr(0, 5) != "FINAL")
+    if (!isFinal(hockeyGame))
         // only want completed games, would be enhancement for live games
         return;
 
-    var gameID = hockeyGame.id;
-    var seasonStart = hockeyGame.id.toString().substr(0,4);
-    var seasonEnd = parseInt(seasonStart, 10) + 1;
-    var season = seasonStart + "" + seasonEnd;
-    var gameURL = "http:////live.nhle.com//GameData//" + season + "//" + gameID + "//gc//gcbx.jsonp";
-
-    $.ajax({
-        type: "POST",
-        dataType: "jsonp",
-        url: gameURL,
-        error: function (jqXHR, exception) {
-            var msg = '';
-            if (jqXHR.status === 200) {
-                return;
-            } else if (jqXHR.status === 0) {
-                msg = 'Not connect.\n Verify Network.';
-            } else if (jqXHR.status == 404) {
-                msg = 'Unable to complete request. Please check date.';
-            } else if (jqXHR.status == 500) {
-                msg = 'Internal Server Error [500].';
-            }
-            setErrorMessage(msg);
-        },
-    })
-    ajaxCallsOutstanding++;
+    var gameURL = nhlApiUrl + hockeyGame.link;
+    doAjaxCall(gameURL, loadGame)
 
 }
 
 // a game is defined as close (really more like good ending) if tied within the last five minutes or 1 goal lead within the last two minutes
 var isCloseGame = function (gameDetails) {
     var closeGame = false;
-    var goalSum = gameDetails.goalSummary;
+    var scoringPlays = gameDetails.liveData.plays.scoringPlays;
     var scores = {};
     var lead = 0;
-    goalSum.forEach(function (period) {
-        var periodGoals = period.goals;
-        if (periodGoals == undefined) return;
-        periodGoals.forEach(function (goal) {
-            if (closeGame) return; // already close, don't care anymore
+    var homeScore = 0;
+    var awayScore = 0;
+    scoringPlays.forEach(function (scoringPlay) {
+        var specificPlay = gameDetails.liveData.plays.allPlays[scoringPlay];
+        if (specificPlay == undefined) return;
+        homeScore = specificPlay.about.goals.home;
+        awayScore = specificPlay.about.goals.away;
+        if (closeGame) return; // already close, don't care anymore
+        var prevLead = lead;
 
-            var prevLead = lead;
-            if ((scores[goal.t1]) == undefined)
-                scores[goal.t1] = 0;
-            if ((scores[goal.t2]) == undefined)
-                scores[goal.t2] = 0;
-            scores[goal.t1]++;
-            lead = Math.abs(scores[goal.t1] - scores[goal.t2]);
-            if (goal.p != 3) return;
+        lead = Math.abs(homeScore - awayScore);
 
+        if (specificPlay.about.period < 3) return; // only care about 3rd period specifics, otherwise the one-goal check works
             
-            // only here if 3rd period
-            var timeIntoPeriod = goal.sip;
-            var totalTimeInPeriod = 20 * 60;
-            var timeRemaining = totalTimeInPeriod - timeIntoPeriod;
-            if (timeRemaining < 5 * 60) // less than 5 minutes left in 3rd
+        // only here if 3rd period
+        var timeRemainingArray = specificPlay.about.periodTimeRemaining.split(":");
+        var timeRemaining = 60 * parseInt(timeRemainingArray[0]) + parseInt(timeRemainingArray[1]);
+        if (timeRemaining < 5 * 60) // less than 5 minutes left in 3rd
+        {
+            // check for tie game
+            if (prevLead == 0 || lead == 0)
             {
-                // check for tie game
-                if (prevLead == 0 || lead == 0)
+                closeGame = true;
+                return;
+            }
+            if (timeRemaining < 2 * 60) // less than 2 minutes left in 3rd
+            {
+                // check for 1 goal lead
+                if (prevLead == 1 || lead == 1)
                 {
                     closeGame = true;
                     return;
                 }
-                if (timeRemaining < 2 * 60) // less than 2 minutes left in 3rd
-                {
-                    // check for 1 goal lead
-                    if (prevLead == 1 || lead == 1)
-                    {
-                        closeGame = true;
-                        return;
-                    }
-                }
             }
+        }
 
-        });
     });
-    if (lead == 1) // don't worry about lead == 0, that's taken care of in the OT/SO check
+    if (lead == 1 || lead == 0)
         closeGame = true;
 
     // now find it in allGames if it's close
@@ -216,13 +151,14 @@ var isCloseGame = function (gameDetails) {
     var desiredGame;
     if (closeGame)
     {
-        allGames.games.forEach(function (eachGame) {
-            if (eachGame.id == gameDetails.gid)
-                desiredGame = eachGame;
-        });
+        var simpleGameInfo = {
+            home: gameDetails.gameData.teams.home.shortName,
+            away: gameDetails.gameData.teams.away.shortName,
+            homeScore: homeScore,
+            awayScore: awayScore,
+        }
+        goodGames.push(simpleGameInfo);
     }
-    if (desiredGame != undefined)
-        goodGames.push(desiredGame);
 
 }
 
@@ -239,7 +175,7 @@ var printGoodGames = function()
 
     var uiList = $("#goodGamesList");
     goodGames.forEach(function (goodGame) {
-        var newDiv = "<div>" + goodGame.atcommon + " @ " + goodGame.htcommon + "<//div>";
+        var newDiv = "<div>" + goodGame.away + " @ " + goodGame.home + "<//div>";
         uiList.append(newDiv);
     })
 }
@@ -269,16 +205,24 @@ var shuffle = function (array)
     return array;
 }
 
-
-/*
-KNOWN ISSUES:
-
-Submitted 2016-02-13
-Games in 2011-2012 season returns two jsonp values, one of which is good (the first one), the second of which is empty. 
-This means we set the goodGames correctly and also set an error message.
-
-Submitted 2016-02-13
-Dates during lockout (approx. summer 2012 - january 2013) return 404
-
-
-*/
+var doAjaxCall = function (url, callback) {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: url,
+        error: function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 200) {
+                return;
+            } else if (jqXHR.status === 0) {
+                msg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status == 404) {
+                msg = 'Unable to complete request. Please check date.';
+            } else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            }
+            setErrorMessage(msg);
+        },
+    }).done(function (data) { callback(data) })
+    ajaxCallsOutstanding++;
+}
