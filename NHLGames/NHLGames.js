@@ -51,7 +51,13 @@ var getGames = function ()
 var parseGames = function(nhlReturnVal)
 {
     allGames = nhlReturnVal;
-    if (allGames == undefined || allGames.dates == undefined || allGames.dates[0] == undefined || allGames.dates[0].games == undefined) {
+    if (allGames == undefined) {
+        setErrorMessage("Unable to parse result.");
+    }
+    else if (allGames.totalGames == 0 ) {
+        setErrorMessage("No games scheduled on selected date.")
+    }
+    else if (allGames.dates == undefined || allGames.dates[0] == undefined || allGames.dates[0].games == undefined) {
         setErrorMessage("Unable to parse result.");
     }
     else if (allGames.dates[0].games.length == 0) {
