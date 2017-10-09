@@ -41,8 +41,10 @@ var getGames = function ()
     ajaxCallsOutstanding = 0;
     goodGames = [];
     var ymd = $('#datePicker').val();
-    if (ymd == "")
+    if (ymd == "") {
         setErrorMessage("Please select a valid date.");
+        return;
+    }
     ajaxURL = nhlApiUrl + "/api/v1/schedule?date=" + ymd;
     doAjaxCall(ajaxURL, loadScoreboard);
     
