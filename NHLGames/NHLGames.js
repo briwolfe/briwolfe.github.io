@@ -90,7 +90,7 @@ var findGoodGames = function(theGames)
 
 var isFinal = function(hockeyGame)
 {
-    if (hockeyGame.status.statusCode == 7)
+    if (hockeyGame.status.abstractGameState == "Final")
         return true;
     else
         return false;
