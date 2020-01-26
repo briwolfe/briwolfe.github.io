@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Divisions</title>
+</head>
+<body>
+    <div>
+        <button id="updateResults" onclick="event_updateAll()">Update</button>
+        <div id="numberOfDivisions">
+            <input id="divisionInput" value="2" />
+        </div>
+        <div id="teamsList">
+            <button id="addTeamButton" onclick="event_addTeam()">Add Team</button>
+            <table id="teamTable">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <th>X value</th>
+                        <th>Y value</th>
+                        <th>Remove?</th>
+                    </tr>
+                    <!--<tr><td><input value="Place1" /></td><td><input value="5" /></td><td><input value="7" /></td><td><button onclick="event_removeTeam(this)">Remove!</button></td></tr>-->
+                </tbody>
+            </table>
+        </div>
+        <div id="teamMap">
+        </div>
+        <div>Groupings</div>
+        <table id="divisionTable">
+        </table>
+        <div id="distanceResult"></div>
+        <div id="importTeams">
+            <textarea id="importTeamsInput"></textarea>
+            <button id="importTeamsButton" onclick="event_importTeams(this)">Import Teams</button>
+        </div>
+    </div>
+    <script type="text/javascript" src="Divisions.js"></script>
+</body>
+</html>
