@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>RentRatios</title>
+</head>
+<body>
+    <div>
+        <button id="updateResults" onclick="event_updateAll()">Update</button>
+        <div id="zipCodeDiv">
+            <input id="zipCodeInput" value="12345" />
+        </div>
+        <div id="homesList">
+            <table id="homeTable">
+                <tbody>
+                    <tr>
+                        <th>Address</th>
+                        <th>Zestimate®</th>
+                        <th>Rent Zestimate®</th>
+                        <th>Ratio</th>
+                        <th>Link</th>
+                    </tr>
+                    <!--<tr><td><input value="Place1" /></td><td><input value="5" /></td><td><input value="7" /></td><td><button onclick="event_removeTeam(this)">Remove!</button></td></tr>-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p>© Zillow, Inc., 2006-2016. Use is subject to <a href="https://www.zillow.com/corp/Terms.htm">Terms of Use</a><br><a href="https://www.zillow.com/wikipages/What-is-a-Zestimate/">What's a Zestimate?</a></p>
+    <img src="http://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Zillow Real Estate Search">
+    <script type="text/javascript" src="RentRatios.js"></script>
+</body>
+</html>
