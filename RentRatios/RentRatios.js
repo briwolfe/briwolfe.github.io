@@ -42,7 +42,7 @@ function updateResults() {
     var latSpread = .1;
     var longSpread = .1;
     var zillowRequestString = 'https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22pagination%22%3A%7B%7D%2C%22mapBounds%22%3A%7B%22west%22%3A' + (longBase - longSpread) + '%2C%22east%22%3A' + (longBase + longSpread) + '%2C%22south%22%3A' + (latBase - latSpread) + '%2C%22north%22%3A' +  + (latBase + latSpread) + '%7D%2C%22isMapVisible%22%3Atrue%2C%22mapZoom%22%3A13%2C%22filterState%22%3A%7B%7D%2C%22isListVisible%22%3Atrue%7D';
-    $.getJSON('http://api.allorigins.win/get?url=' + zillowRequestString, processLocationResponse);
+    $.getJSON('https://api.allorigins.win/get?url=' + zillowRequestString, processLocationResponse);
     //var reqString = "https://crossorigin.me/https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22pagination%22%3A%7B%7D%2C%22mapBounds%22%3A%7B%22west%22%3A-92.30739531103518%2C%22east%22%3A-91.90570768896487%2C%22south%22%3A37.78805572937743%2C%22north%22%3A37.86479996996949%7D%2C%22isMapVisible%22%3Atrue%2C%22mapZoom%22%3A12%2C%22filterState%22%3A%7B%22sortSelection%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%7D%2C%22isListVisible%22%3Atrue%7D"
     //doAjaxCall(reqString, processLocationResponse);
 }
