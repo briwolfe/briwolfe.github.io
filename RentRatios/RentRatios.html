@@ -2,6 +2,22 @@
 <html lang="en">
 <head>
     <title>RentRatios</title>
+    <style>
+        table {
+          border-collapse: collapse;
+        }
+        th, td {
+          border: 1px solid #ccc;
+          padding: 10px;
+          text-align: left;
+        }
+        tr:nth-child(even) {
+          background-color: #eee;
+        }
+        tr:nth-child(odd) {
+          background-color: #fff;
+        }      
+    </style>
 </head>
 <body>
     <div>
@@ -22,10 +38,12 @@
                     <tr>
                         <th>Address</th>
                         <th>Home Type</th>
+                        <th>Foreclosure?</th>
                         <th>Sale Price</th>
                         <th>Zestimate®</th>
                         <th>Rent Zestimate®</th>
-                        <th>Ratio</th>
+                        <th>Sale Ratio</th>
+                        <th>Rent Ratio</th>
                         <th>Link</th>
                     </tr>
                 </thead>

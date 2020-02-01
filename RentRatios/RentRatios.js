@@ -10,15 +10,20 @@ function processLocationResponse(data) {
         if (hdpData != undefined) {
             homeData = hdpData.homeInfo;
             homeAddress = homeData.streetAddress + " " + homeData.city;
+            foreclosure = homeData.isPreforeclosureAuction;
             salePrice = homeData.priceForHDP;
             zestimate = homeData.zestimate;
             rentalZestimate = homeData.rentZestimate;
-            ratio = "";
-            if (rentalZestimate != "" && zestimate != "") {
-                ratio = zestimate / rentalZestimate;
+            saleRatio = "";
+            if (zestimate != "" && salePrice != "") {
+                saleRatio = Math.round(salePrice / zestimate * 100) / 100;
+            }
+            rentRatio = "";
+            if (rentalZestimate != "" && salePrice != "") {
+                rentRatio = Math.round(salePrice / rentalZestimate);
             }
             homeType = homeData.homeType;
-            addHome(homeAddress, homeType, salePrice, zestimate, rentalZestimate, ratio, homeLink);
+            addHome(homeAddress, homeType, foreclosure, salePrice, zestimate, rentalZestimate, saleRatio, rentRatio, homeLink);
         } else {
             skippedResults++;
             //alert("here");
@@ -43,9 +48,9 @@ function updateResults() {
     $.getJSON('https://api.allorigins.win/get?url=' + zillowRequestString, processLocationResponse);
 }
 
-function addHome(address, homeType, salePrice, zestimate, rentZestimate, ratio, link) {
+function addHome(address, homeType, foreclosure, salePrice, zestimate, rentZestimate, saleRatio, rentRatio, link) {
     var newRow = document.createElement("tr");
-    newRow.innerHTML = "<td>" + address + "</td><td>" + homeType + "</td><td>" + salePrice + "</td><td>" + zestimate + "</td><td>" + rentZestimate + "</td><td>" + ratio + "</td><td><a target=\"_blank\" href=\"" + link + "\"/>Link</td>";
+    newRow.innerHTML = "<td>" + address + "</td><td>" + homeType + "</td><td>" + foreclosure + "</td><td>" + salePrice + "</td><td>" + zestimate + "</td><td>" + rentZestimate + "</td><td>" + saleRatio + "</td><td>" + rentRatio + "</td><td><a target=\"_blank\" href=\"" + link + "\"/>Link</td>";
     var theTable = document.getElementById("homeTable").getElementsByTagName("tbody")[0];
     theTable.appendChild(newRow);
 }
