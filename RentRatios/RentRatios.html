@@ -6,19 +6,30 @@
 <body>
     <div>
         <button id="updateResults" onclick="event_updateAll()">Update</button>
-        <div id="zipCodeDiv">
-            <input id="zipCodeInput" value="12345" />
+        <div id="latitudeDiv">
+            <span>Latitude</span>
+            <br>
+            <input id="latitudeInput" value="37.843075" />
+        </div>
+        <div id="longitudeDiv">
+            <span>Longitude</span>
+            <br>
+            <input id="longitudeInput" value="-92.15365" />
         </div>
         <div id="homesList">
             <table id="homeTable">
-                <tbody>
+                <thead>
                     <tr>
                         <th>Address</th>
+                        <th>Home Type</th>
+                        <th>Sale Price</th>
                         <th>Zestimate®</th>
                         <th>Rent Zestimate®</th>
                         <th>Ratio</th>
                         <th>Link</th>
                     </tr>
+                </thead>
+                <tbody>
                 </tbody>
             </table>
         </div>
@@ -26,5 +37,6 @@
     <p>© Zillow, Inc., 2006-2016. Use is subject to <a href="https://www.zillow.com/corp/Terms.htm">Terms of Use</a><br><a href="https://www.zillow.com/wikipages/What-is-a-Zestimate/">What's a Zestimate?</a></p>
     <img src="https://www.zillow.com/widgets/GetVersionedResource.htm?path=/static/logos/Zillowlogo_200x50.gif" width="200" height="50" alt="Zillow Real Estate Search">
     <script type="text/javascript" src="RentRatios.js"></script>
+    <script type="text/javascript" src="jquery-2.1.4.js"></script>
 </body>
 </html>
