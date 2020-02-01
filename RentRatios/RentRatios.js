@@ -1,5 +1,3 @@
-var zwsid = "X1-ZWz17fbty5omiz_4kciw";
-
 function processLocationResponse(data) {
     theResponse = JSON.parse(data.contents);
     searchResults = theResponse.searchResults.mapResults;
@@ -43,17 +41,6 @@ function updateResults() {
     var longSpread = .1;
     var zillowRequestString = 'https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22pagination%22%3A%7B%7D%2C%22mapBounds%22%3A%7B%22west%22%3A' + (longBase - longSpread) + '%2C%22east%22%3A' + (longBase + longSpread) + '%2C%22south%22%3A' + (latBase - latSpread) + '%2C%22north%22%3A' +  + (latBase + latSpread) + '%7D%2C%22isMapVisible%22%3Atrue%2C%22mapZoom%22%3A13%2C%22filterState%22%3A%7B%7D%2C%22isListVisible%22%3Atrue%7D';
     $.getJSON('https://api.allorigins.win/get?url=' + zillowRequestString, processLocationResponse);
-    //var reqString = "https://crossorigin.me/https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22pagination%22%3A%7B%7D%2C%22mapBounds%22%3A%7B%22west%22%3A-92.30739531103518%2C%22east%22%3A-91.90570768896487%2C%22south%22%3A37.78805572937743%2C%22north%22%3A37.86479996996949%7D%2C%22isMapVisible%22%3Atrue%2C%22mapZoom%22%3A12%2C%22filterState%22%3A%7B%22sortSelection%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%7D%2C%22isListVisible%22%3Atrue%7D"
-    //doAjaxCall(reqString, processLocationResponse);
-}
-
-function getZillowForSaleFromZip(zipCode) {
-
-}
-
-function processZillowHomeDetails(address, citystatezip) {
-    reqUrl = "https://www.zillow.com/webservice/GetSearchResults.htm?zws-id=X1-ZWz17fbty5omiz_4kciw&address=" + address + "&citystatezip=" + citystatezip + "&rentzestimate=true"
-
 }
 
 function addHome(address, homeType, salePrice, zestimate, rentZestimate, ratio, link) {
@@ -65,26 +52,4 @@ function addHome(address, homeType, salePrice, zestimate, rentZestimate, ratio, 
 
 function event_updateAll() {
     updateResults();
-}
-
-var doAjaxCall = function (url, callback) {
-    $.ajax({
-        type: "GET",
-        dataType: "jsonp",
-        url: url,
-        error: function (jqXHR, exception) {
-            var msg = '';
-            if (jqXHR.status === 200) {
-                return;
-            } else if (jqXHR.status === 0) {
-                msg = 'Not connect.\n Verify Network.';
-            } else if (jqXHR.status == 404) {
-                msg = 'Unable to complete request. Please check date.';
-            } else if (jqXHR.status == 500) {
-                msg = 'Internal Server Error [500].';
-            }
-            //setErrorMessage(msg);
-        },
-    }).done(function (data) { callback(data) })
-    //ajaxCallsOutstanding++;
 }
