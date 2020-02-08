@@ -1,8 +1,10 @@
+var scalar = 1;
 function processLocationResponse(data) {
     theResponse = JSON.parse(data.contents);
     searchResults = theResponse.searchResults.mapResults;
     totalResults = 0;
     skippedResults = 0;
+    if (searchResults.length < 500) {
     searchResults.forEach(function (eachResult) {
         totalResults++;
         homeLink = "https://www.zillow.com" + eachResult.detailUrl;
@@ -30,6 +32,10 @@ function processLocationResponse(data) {
         }
     });
     alert("Processed " + totalResults + " results, of which " + skippedResults + " were skipped for lack of data.");
+    }else{
+        scalar *= 2;
+        updateResults();
+    }
 }
 
 function updateResults() {
@@ -42,8 +48,8 @@ function updateResults() {
     }
     //var latBase = 37.843075;
     //var longBase = -92.15365;
-    var latSpread = .1;
-    var longSpread = .1;
+    var latSpread = .1/scalar;
+    var longSpread = .1/scalar;
     var zillowRequestString = 'https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22pagination%22%3A%7B%7D%2C%22mapBounds%22%3A%7B%22west%22%3A' + (longBase - longSpread) + '%2C%22east%22%3A' + (longBase + longSpread) + '%2C%22south%22%3A' + (latBase - latSpread) + '%2C%22north%22%3A' +  + (latBase + latSpread) + '%7D%2C%22isMapVisible%22%3Atrue%2C%22mapZoom%22%3A13%2C%22filterState%22%3A%7B%7D%2C%22isListVisible%22%3Atrue%7D';
     $.getJSON('https://api.allorigins.win/get?url=' + zillowRequestString, processLocationResponse);
 }
@@ -56,5 +62,6 @@ function addHome(address, homeType, foreclosure, salePrice, zestimate, rentZesti
 }
 
 function event_updateAll() {
+    scalar = 1;
     updateResults();
 }
