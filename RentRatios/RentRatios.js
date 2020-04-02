@@ -1,4 +1,9 @@
 var scalar = 1;
+var tf = new TableFilter(document.querySelector('#homeTable'), {
+    base_path: 'tablefilter/'
+});
+var zipCodeArray;
+
 function processLocationResponse(data) {
     theResponse = JSON.parse(data.contents);
     searchResults = theResponse.searchResults.mapResults;
@@ -13,6 +18,7 @@ function processLocationResponse(data) {
             homeData = hdpData.homeInfo;
             homeAddress = homeData.streetAddress + " " + homeData.city;
             foreclosure = homeData.isPreforeclosureAuction;
+            priceReduction = homeData.priceReduction;
             salePrice = homeData.priceForHDP;
             zestimate = homeData.zestimate;
             rentalZestimate = homeData.rentZestimate;
@@ -25,12 +31,13 @@ function processLocationResponse(data) {
                 rentRatio = Math.round(salePrice / rentalZestimate);
             }
             homeType = homeData.homeType;
-            addHome(homeAddress, homeType, foreclosure, salePrice, zestimate, rentalZestimate, saleRatio, rentRatio, homeLink);
+            addHome(homeAddress, homeType, foreclosure, priceReduction, salePrice, zestimate, rentalZestimate, saleRatio, rentRatio, homeLink);
         } else {
             skippedResults++;
             //alert("here");
         }
     });
+    tf.init();
     alert("Processed " + totalResults + " results, of which " + skippedResults + " were skipped for lack of data.");
     }else{
         scalar *= 2;
@@ -54,9 +61,9 @@ function updateResults() {
     $.getJSON('https://api.allorigins.win/get?url=' + zillowRequestString, processLocationResponse);
 }
 
-function addHome(address, homeType, foreclosure, salePrice, zestimate, rentZestimate, saleRatio, rentRatio, link) {
+function addHome(address, homeType, foreclosure, priceReduction, salePrice, zestimate, rentZestimate, saleRatio, rentRatio, link) {
     var newRow = document.createElement("tr");
-    newRow.innerHTML = "<td>" + address + "</td><td>" + homeType + "</td><td>" + foreclosure + "</td><td>" + salePrice + "</td><td>" + zestimate + "</td><td>" + rentZestimate + "</td><td>" + saleRatio + "</td><td>" + rentRatio + "</td><td><a target=\"_blank\" href=\"" + link + "\"/>Link</td>";
+    newRow.innerHTML = "<td>" + address + "</td><td>" + homeType + "</td><td>" + foreclosure + "</td><td>" + priceReduction + "</td><td>" + salePrice + "</td><td>" + zestimate + "</td><td>" + rentZestimate + "</td><td>" + saleRatio + "</td><td>" + rentRatio + "</td><td><a target=\"_blank\" href=\"" + link + "\"/>Link</td>";
     var theTable = document.getElementById("homeTable").getElementsByTagName("tbody")[0];
     theTable.appendChild(newRow);
 }
@@ -65,3 +72,53 @@ function event_updateAll() {
     scalar = 1;
     updateResults();
 }
+
+function csvToObjects(csv){
+
+  var lines=csv.split("\n");
+
+  var result = [];
+
+  // NOTE: If your columns contain commas in their values, you'll need
+  // to deal with those before doing the next step 
+  // (you might convert them to &&& or something, then covert them back later)
+  // jsfiddle showing the issue https://jsfiddle.net/
+  var headers=lines[0].split(",");
+
+  for(var i=1;i<lines.length;i++){
+
+      var obj = {};
+      var currentline=lines[i].split(",");
+      result[currentline[0]] = currentline;
+
+      //for(var j=0;j<headers.length;j++){
+      //    obj[j] = currentline[j];
+      //}
+
+      //result[currentline[0]] = obj;
+
+  }
+
+  return result; //JavaScript object
+  //return JSON.stringify(result); //JSON
+}
+
+function setLatLongFromZip() {
+    var zipVal = prompt("ZIP Code","12345");
+    if (zipVal == null || zipVal == "") {
+        return;
+    } else {
+        zipObject = zipCodeArray[zipVal];
+        if (zipObject != null) {
+            document.getElementById("latitudeInput").value = zipObject[3];
+            document.getElementById("longitudeInput").value = zipObject[4];
+            alert("Coordinates updated");
+        } else {
+            alert("ZIP not found");
+        }
+    }
+}
+
+$(document).ready(function() {
+    zipCodeArray = csvToObjects(zipCodesCsv);
+});
