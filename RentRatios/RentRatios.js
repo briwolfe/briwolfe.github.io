@@ -39,6 +39,7 @@ function processLocationResponse(data) {
     });
     tf.init();
     alert("Processed " + totalResults + " results, of which " + skippedResults + " were skipped for lack of data.");
+    tf.filter();
     }else{
         scalar *= 2;
         updateResults();
@@ -120,5 +121,16 @@ function setLatLongFromZip() {
 }
 
 $(document).ready(function() {
+    urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("lat")) {
+      document.getElementById("latitudeInput").value = urlParams.get("lat");
+    }
+    if (urlParams.has("long")) {
+      document.getElementById("longitudeInput").value = urlParams.get("long");
+    }
+    if (urlParams.has("hometype")) {
+      //tf.init();
+      //tf.setFilterValue(1, urlParams.get("hometype"));
+    }
     zipCodeArray = csvToObjects(zipCodesCsv);
 });
