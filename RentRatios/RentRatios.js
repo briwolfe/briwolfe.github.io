@@ -6,18 +6,24 @@ var zipCodeArray;
 
 function processLocationResponse(data) {
     theResponse = JSON.parse(data.contents);
-    searchResults = theResponse.searchResults.mapResults;
+    searchResults = theResponse.cat2.searchResults.mapResults.concat(theResponse.cat2.searchResults.listResults);
     totalResults = 0;
     skippedResults = 0;
     if (searchResults.length < 500) {
     searchResults.forEach(function (eachResult) {
         totalResults++;
-        homeLink = "https://www.zillow.com" + eachResult.detailUrl;
+        homeLink = "";
+        if (eachResult.detailUrl.includes("www.zillow.com")) {
+          homeLink = eachResult.detailUrl;
+        } else {
+          homeLink = "https://www.zillow.com" + eachResult.detailUrl;
+        }
+        homeAddress = homeLink.split('/')[4].split('-').join(' ');
         hdpData = eachResult.hdpData;
         if (hdpData != undefined) {
             homeData = hdpData.homeInfo;
-            homeAddress = homeData.streetAddress + " " + homeData.city;
-            foreclosure = homeData.isPreforeclosureAuction;
+            //homeAddress = homeData.streetAddress + " " + homeData.city;
+            foreclosure = homeData.homeStatus == "PRE_FORECLOSURE";
             priceReduction = homeData.priceReduction;
             salePrice = homeData.priceForHDP;
             zestimate = homeData.zestimate;
@@ -58,8 +64,9 @@ function updateResults() {
     //var longBase = -92.15365;
     var latSpread = .1/scalar;
     var longSpread = .1/scalar;
-    var zillowRequestString = 'https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22pagination%22%3A%7B%7D%2C%22mapBounds%22%3A%7B%22west%22%3A' + (longBase - longSpread) + '%2C%22east%22%3A' + (longBase + longSpread) + '%2C%22south%22%3A' + (latBase - latSpread) + '%2C%22north%22%3A' +  + (latBase + latSpread) + '%7D%2C%22isMapVisible%22%3Atrue%2C%22mapZoom%22%3A13%2C%22filterState%22%3A%7B%7D%2C%22isListVisible%22%3Atrue%7D';
-    $.getJSON('https://api.allorigins.win/get?url=' + zillowRequestString, processLocationResponse);
+    var zillowRequestString = 'https://www.zillow.com/search/GetSearchPageState.htm?searchQueryState=%7B%22pagination%22%3A%7B%7D%2C%22mapBounds%22%3A%7B%22west%22%3A' + (longBase - longSpread) + '%2C%22east%22%3A' + (longBase + longSpread) + '%2C%22south%22%3A' + (latBase - latSpread) + '%2C%22north%22%3A' +  + (latBase + latSpread) + '%7D%2C%22isMapVisible%22%3Atrue%2C%22mapZoom%22%3A13%2C%22filterState%22%3A%7B%7D%2C%22isListVisible%22%3Atrue%7D%26wants={"cat1":["mapResults"],"cat2":["listResults"]}';
+    var jsonRequestString = 'https://api.allorigins.win/get?url=' + zillowRequestString;
+    $.getJSON(jsonRequestString, processLocationResponse);
 }
 
 function addHome(address, homeType, foreclosure, priceReduction, salePrice, zestimate, rentZestimate, saleRatio, rentRatio, link) {
