@@ -1,6 +1,8 @@
 var scalar = 1;
 var tf = new TableFilter(document.querySelector('#homeTable'), {
-    base_path: 'tablefilter/'
+    base_path: 'tablefilter/',
+    rows_counter: true,
+    alternate_rows: true
 });
 var zipCodeArray;
 
