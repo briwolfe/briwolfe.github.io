@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    function showDetails(clickedElement) {
+         clickedElement.classList.toggle("showDetails");
+    }
+    </script>
+    <style>
+    body{
+        font-size:larger;
+        margin-inline: 10em;
+    }
+    li span.clause:hover{
+        background-color: #ffff80;
+        cursor: pointer;
+    }
+    li.showDetails span.clause{
+        background-color: #ffff80;
+    }
+    li span.details{
+        display: none;
+        font-size:large;
+        text-indent: 1em;
+        padding-left: 2em;
+    }
+    li.showDetails span.details{
+        display: block;
+    }
+    </style>
+</head>
+<body>
+<h1>Electoral Reform Amendment</h1>
+<ol>
+<li onclick="showDetails(this)">
+<span class="clause">
+The number of congresspersons shall be equal to the cube root of twice the total number of persons counted in the most recent decennial census, that cube root being rounded up to the nearest multiple of 50.
+</span>
+<span class="details">
+The current number of representatives (435) <a href="https://en.wikipedia.org/wiki/Apportionment_Act_of_1911" target="_blank">hasn't materially changed since 1913</a>, during which time the country's population has more than tripled. It is past time that the House grow, but there is no need for it to grow linearly with population. This cube root provision is an extension of the <a href="https://en.wikipedia.org/wiki/Cube_root_rule" target="_blank">Cube root rule</a>, with the "cube root of twice" provision intended to account for the inclusion of the Senate in this number as well, as most applications of the rule include only the lower house. The rounding is intended to prevent the number from changing after every census. As of the <a href="https://en.wikipedia.org/wiki/2020_United_States_census" target="_blank">2020 U.S. Census</a>, the population of the United States is about 331 million, which results in a total congressperson count of 872, rounded up to nearest multiple of 50 giving 900 congresspersons. Any US population between 307 million and 365 million will also result in this 900 congresspersons figure.</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+The number of senators shall be 3 from each state, and the number of representatives shall be the balance of the number of congresspersons.
+</span>
+<span class="details">
+The 1st clause expands the Congress overall. This clause specifically expands the Senate. Each state should have the opportunity to give its opinion on the makeup of the Senate at each election, which this clause would provide by having one senator from each state elected every 2 years. Given the current population and 50 state makeup of the union, this clause, together with the previous one, would direct that the Congress would consist of 150 senators and 750 representatives. This also prevents the House's expansion from overwhelming the Senate. At current population numbers, the House would grow by 72%, and the Senate would grow by 50%.
+</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+For the purposes of congressional apportionment and congressional election, but for no other explicit purposes, each inhabited district or territory of the United States which is not part of any state shall be considered as part of such state as Congress shall provide.
+</span>
+<span class="details">
+Every citizen of the United States should have representation in the federal government. This clause specifies that. There are currently six permanently-inhabited districts and territories that are not part of a state: American Samoa, the District of Columbia, Guam, the Northern Marianas Islands, Puerto Rico, and the U.S. Virgin Islands. The Congress will likely decide that, for geographic and cultural reasons, it makes the most sense to include American Samoa, Guam, and the Northern Marianas Islands with the state of Hawaii, the District of Columbia with the state of Maryland or Virginia, and Puerto Rico and the U.S. Virgin Islands with the state of Florida. That would be up to Congress to decide, but it could (and should) take the desires of each district or territory into account. Importantly, this would not just be "Guam gets to elect Hawaii's federal representatives", but "Hawaii's federal representatives also represent Guam, and Hawaii might get an extra representative because of it". This clause allows Congress the flexibility to make changes as warranted (for example, if Puerto Rico became a state, the U.S. Virgin Islands would likely be paired with it instead of Florida).
+</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+Representatives shall be elected proportional to the vote from within each state, such that each voter shall have the opportunity to rank slates of candidates from their state, and the slate with the lowest number of preferenced votes shall be eliminated successively, with such votes distributed to the next slate chosen by each voter, such choice having not yet been eliminated, until each remaining slate is due at least one representative. Ties shall be broken by the drawing of lots.
+</span>
+<span class="details">
+The current system of <a href="https://en.wikipedia.org/wiki/First-past-the-post_voting" target="_blank">FPTP (plurality)</a> voting leaves large portions of the republic unrepresented in government and <a href="https://en.wikipedia.org/wiki/Duverger%27s_law" target="_blank">necessarily devolves into a two-party system</a>. Americans are increasingly dissatisfied with the Republican and Democratic parties, but are afraid of "throwing their vote away" if they vote any differently. Negative partisanship is increasingly the motivator for many voters, with individuals voting <i>against</i> their disfavored (or indeed, hated) party instead of <i>for</i> their favored party. This increased rancor has started to seep into voters' personal lives. This is dangerous for our democracy. This clause specifies that representatives will be elected by proportional representation, with the proportionality to be determined within each state. It also specifies that votes for the smallest parties will be redistributed according to voters' preferences. This will produce a hybrid of the proportional systems used around the world, which largely use a threshold below which all votes are discarded, and the <a href="https://en.wikipedia.org/wiki/Single_transferable_vote" target="_blank">Single Transferable Vote (STV)</a> system, which selects members instead of parties and can be confusing and unwieldy for large elections.
+</span>
+<span class="details">
+A proportional system will allow for a greater spectrum of ideas, and more of a continuum than the current system. If 10% of the population believes in something, then 10% of the legislature (especially the lower house) should represent that view, even if that view is wrong, objectionable, or even abhorrent to the other 90% of the population. It is important that these topics be discussed in the open, so that Americans can get a fuller understanding of the beliefs and ideals of their countrymen.
+</span>
+<span class="details">
+Some reject proportional representation on the grounds that it is better for individuals to have a representative to whom they feel connected, and who lives, works, and knows their part of the country and what it wants and needs of the government. This does not take that away! Representatives will still be elected on a state-by-state basis, so that any voter in Nebraska will be represented by Nebraskans with Nebraska's interests at heart. But increasingly, voters wants and needs are not defined by where they live, but about what ideals and values they hold for the proper role of government in domestic and international affairs. The current system takes <i>away</i> that representation by offering much of the country no way to effectively state their views because the congressional election in which they participate is (often via gerrymandering) non-competitive from the start. Currently, the state of Massachusetts has 9 members of the House, <i>all of whom are Democrats</i>, despite the fact that in the most recent presidential election of 2020, Donald Trump received 32% of the vote! If fully one third of all Massachusetts citizens are Republicans, then those citizens should be represented in the House proportional to their numbers.
+</span>
+<span class="details">
+If parties are to be elected proportional to their vote, won't they just select representatives from the big cities and ignore the rural areas? Not necessarily, because the nature of the system dissuades the party from doing that. If the "Democratic Party of California" just selects individuals from Los Angeles and San Francisco for their list, some other organization (the "True Democratic Party of California") will just spring up to grab those votes. Notably, because of the proportional nature of the vote and the redistribution of smaller parties' voters, there is no particular advantage or disadvantage to structuring parties this way.
+</span>
+<span class="details">
+Another possible objection is that parties will be effectively enshrined in the Constitution, despite the founders' obvious distaste for them. The response to that is simple: too bad. If you have politics, you get parties. You cannot close your eyes and put your fingers in your ears and pretend that parties do not spring up wherever like-minded people share a common goal of political representation. Instead of ignoring them, like our current system pretends to do, let's acknowledge them and set up our system in such a way that parties become less of a negative influence on our politics.
+</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+Senators shall be elected by the representatives of said state by majority vote. If the senator chosen is a representative, the representatives must concurrently select a replacement representative. If the representatives are unable to vote by majority for a senator, the seat shall remain vacant until such time as they are able to vote by majority for a senator. Senate seats that are being vacated due to the expiration of a term shall be filled by representatives of the incoming Congress, not by representatives of the outgoing Congress.
+</span>
+<span class="details">
+The 17th amendment instituted the direct election of senators, taking that power away from state legislatures. It was a good idea to take that off the plate of state legislatures, which were consumed by and mired in the senatorial election process, often to the detriment of state business. This amendment reintroduces indirect election, but does so with individuals who already represent the people's collective desires for the direction of the federal government - their representatives. This method does not work without proportional election of representatives, but it is more desirable than the current situtation for a simple reason, in that it forces compromise and leads to the election of senators who are more likely to represent the state as a whole, instead of one faction of a dominant party. The Senate is meant to be the more even-keeled of the two bodies, the cooling saucer for the passions of the House. Forcing compromise in the election of senators will allow for the election of senators that do not need to appeal to the extremes of a primary electorate, but must instead look to bridge divides between elected parties within the state. This is the perfect recipe for a functional senator and a functioning Senate.
+</span>
+<span class="details">
+The representatives may vote for anyone who is otherwise qualified, but if they choose to vote for a representative (which they may do quite frequently), the concurrent replacement of that representative will remove the disincentive of losing a seat in the House. That concurrent election may also be used as a bargaining chip in the senatorial election - we'll vote for your representative as senator if you vote for our choice as replacement representative. Obviously this won't happen where parties have disparate ideologies, but it is another way in which parties may be incentivized to compromise on Senate choices. In states with only one representative (with this amendment's changes, as of the 2020 Census there would only be one such state), it is possible for a newly-elected representative to elect themselves to the Senate and choose their own replacement. This isn't ideal, but it's also not ridiculous, as the voters chose them knowing they would get to elect a senator, and likely with their intentions well-known on choice of senator. You may even get a "ticket" running together, with Jane Doe running for "senator" and John Smith campaigning with her so that she could elect herself as senator and choose him as replacement representative.
+</span>
+<span class="details">
+If the representatives cannot come to an agreement on their choice of senator, then the seat remains vacant. This is yet another nudge toward compromise. There is no established voting procedure here, so there is no tie-breaking procedure and no formal resolution process. If you can't compromise, your state goes without a senator until you can. Voters would likely be upset at this lack of representation in the Senate and punish the parties accordingly in the next election, so parties would have incentive to compromise. And this may result in the election of perceived "elder statesmen" who are not particularly partisan, which would be not out of character with goals of the Senate itself.
+</span>
+<span class="details">
+The final sentence is merely a clarification on who elects the senator - it is the incoming representatives who have just been selected by the people.
+</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+Whenever there is a vacancy in the position of representative, the seat shall remain vacant until the next Congress. Whenever there is a vacancy in the position of senator, the seat shall be filled in accordance with the above election process for senators.
+</span>
+<span class="details">
+In a proportional system, there is no such thing as a special election for a single seat. There are precious few good options here. One would be to allow the group/party which first submitted the party list to submit, either with the election or after the vacancy, alternatives should vacancies arise. But a representative might have left the party which they were affiliated, or that party might have disintegrated since the election, and in any case the voters voted for that party knowing the rank order of its representatives, so it would be unfair for a party to be able to essentially "sub out" its members with other, more extreme options. Another option would be to have the state's representatives choose a new representative to join them, but this runs into issues where the vacancy is due to the departure of a member in the minority. Instead, the cleanest course of action is simply to let the congressional seat be vacant until the next election, which will be (on average) less than a year away. The representation for the state will not be so harshly curtailed as to necessitate a different course of action, as the state will still have on average 14 other representatives, given the current population and makeup of the states.
+</span>
+<span class="details">
+For a vacancy in the Senate, on the other hand, there is no need to reinvent the wheel. The same procedure for routine election of senators may be used. One possible concern is that a senator nearing the end of their 2nd or 4th year who is planning to resign around the start of the next Congress may choose to time their resignation depending on the outcome of the congressional elections, so that they may choose which representatives elect their successor. But this is not really so great an issue after all: the senator was elected to a six year term, so if they believe that one or the other group of representatives will choose a senator who better represents their views, then they are helping to preserve the effect of their legitimate election.
+</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+No person shall be eligible to be a representative having previously served 6 terms as representative, nor shall any person be eligible to be a senator having previously served 3 terms as senator, but no term beginning before the effective date of this article shall be taken into account in determining eligibility, and partial terms shall be counted only if more than half of a full term was served.
+</span>
+<span class="details">
+Term limits for representatives and senators have been discussed for decades. This term limit clause is an attempt at something of a compromise. There should be some turnover within our democracy for the injection of vitality and fresh ideas it brings, but there does not need to be so much forced turnover that large swaths of the Congress do not have the basics down when they arrive on January 2nd. Some object to term limits on the basis that it will increase the power of lobbyists, but the relatively long 12 and 18 year limits should muffle those voices. On the other hand, with a proportional system, it would be easy for a well-representated party to keep several members in Congress for life, with no need for turnover at the top of their party list at all. The interplay between 12 and 18 year limits also should allow any ambitious representatives at least one or two chances to rise to the Senate - currently a state may have an incumbent-less Senate seat only once every decade or two, but with this system there will be vacant seats at most an average of six years apart.
+</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+The electoral college is abolished. Upon a vacancy in both the presidency and vice-presidency, or in anticipation of such a vacancy due to the expiration of a term, the Congress shall elect a president and vice-president together on a presidential slate. If such vacancy be due to the the expiration of a term, the Congress shall have its first such election two weeks before the expiration of the term. No person otherwise prohibited in this Constitution from the presidency shall be eligible to the presidency or vice-presidency. If a president and vice-president are selected by a majority of the Congress, then the two individuals shall be considered the president-elect and the vice-president-elect, and shall assume said offices upon their actual vacancy. If there is no such majority in the Congress, then the vote shall be repeated, such that there shall be two votes per day, after each vote, to include the first, eliminating all of those presidential slates receiving zero votes, and also the bottom one third, rounded down, of all of those presidential slates receiving votes, until a vote results in a majority for one slate, at which time said slate shall be considered elected. Ties shall be broken by the drawing of lots. At any time between such successive votes, a majority of the Congress may submit a signed attestation for a presidential slate, which may or may not have received votes or been previously eliminated, and that slate shall be considered elected.
+</span>
+<span class="details">
+The electoral college was a good and clever idea that doesn't work. The initial intentions of the electoral college were that a group of rich white men (sometimes just the state legislature, which South Carolina used <i>until 1868</i>) would elect a set of representatives to get together and figure out who should be president. They couldn't all get together, of course, because that would involve weeks of travel from far-flung regions of the country like New Hampshire or Georgia, but they would be wise and independent decision-makers who would discuss and dissect the options and come up with a satisfactory answer, unbeholden to any preconceived ideas they might have had before they arrived. This broke down basically immediately. The rise of parties (remember those?) meant that electors were chosen specifically to elect a single individual, and the emergence of the winner-take-all system and swing states meant that only a few states actually mattered. Our current system basically ignores the two largest states (California and Texas) entirely, and focuses on a handful of states that have the great good fortune to be bombarded by television advertising for a solid year. Do you live in Mississippi or Maryland? We don't care about you, and your vote will not make any difference whatsoever. Oh you live in Wisconsin? Look, I'm eating cheese! It's exhausting.
+</span>
+<span class="details">
+Some things about the electoral college are worth keeping. Indirect elections are not a bad idea, especially as they can help guard against unbridled populism and allow for iterative elections at a reasonable scale. And any change to the current system needs to acknowledge and preserve the federal and republican nature of our government, where states matter, and smaller states can't simply be ignored by bigger ones.
+</span>
+<span class="details">
+So how do we get all that? Simple - the Congress elects the president. So we still give some preference (though less than we used to) to smaller states, as they have an equal number of senators to the larger states, but the population imbalance is lessened somewhat, given our earlier expansion of the Congress. And because the House is now elected proportionally within each state, and the Senate is elected by the House delegation from within each state, we preserve the federal character of the presidential election, but allow a diversity of opinion from within each state, so that every voter throughout the country (even those not residents of a state) will have a say. Additionally, by having each representative and senator vote individually, we are allowing each congressperson to make up their own mind about the candidates.
+</span>
+<span class="details">
+Because of the proportional nature of the House delegations, it is unlikely a majority of the Congress will be from a single party. We do not want the largest party, perhaps with only 20 to 30 percent support, to be able decide the president by themselves, as might happen in a plurality election. But ultimately, this is not an issue - everyone is together in the capital, so we can hold more than one vote! The representatives and senators will each vote for the president and vice-president (together, no <a href="https://en.wikipedia.org/wiki/1800_United_States_presidential_election" target="_blank">1800 shenanigans</a> this time). If there is a majority for one presidential/vice-presidential ticket (called a "slate" in the amendment text), then great! If not, well it's time to start paring down the options. Ideally we would only eliminate one candidate at a time, but with so many electors, that would take forever, especially if interested parties attempted to lengthen the process. So we must eliminate many slates at a time. By eliminating any slates that didn't receive any votes (this is especially necessary after the first vote, so that we don't have new slates popping up partway through the process), plus one-third of all that did, we quickly get down to more reasonable numbers of active candidacies. By the time we get down to five remaining options, we are only eliminating one slate per vote (due to the rounding provision), so each vote becomes even more representative of the wishes of the Congress. It may take many votes (possibly a majority of the two-week time frame), but it may take relatively few as well: if the Congress consists of 30% Republicans, 15% Blue Dogs, and 10% Libertarians, they might form an informal alliance before the first vote even occurs, and so avoid repeat votes altogether.
+</span>
+<span class="details">
+Will voters have no idea who their president could be until just days before their inauguration? No, almost certainly not. The results of the congressional election will be well known, and it's likely that parties will make their intentions clear far in advance of the actual presidential vote; the parties may even hold non-binding primaries that look not dissimilar to their current ones. It is likely that everyone will have a clear view of who the top candidates are, and in some years, who the near-certain winner will be.
+</span>
+<span class="details">
+Ties must be broken somehow because, unlike for senators, there must be a president. It might be possible to devise other ways to break them, but the fairest and quickest way is random chance. It is likely many ties will occur in the first round or two of voting, where they will likely be of little consequence (a tiebreaker between two individuals both getting three votes won't save either from elimination, and a tiebreaker between two individuals both getting fifty votes won't cause either to be eliminated), but in later rounds they could become important. If the Congress (and by extension the country) is evenly split between two choices, then there is no preference for either, and neither is a worse choice than the other. This may cause some tactical voting, but it will likely be minimal, as the repeated votes make ensuring one slate is eliminated before another unnecessary, and the majority still has to come from somewhere.
+</span>
+<span class="details">
+If the number of remaining candidates is dwindling, and there is a sudden moment of clarity among a majority of the Congress that "we don't like any of these options", then it is possible for a majority to instead effectively sidestep the ongoing election process and choose another president and vice-president. This would likely be rare, as it would require an immense amount of coordination in a relatively small amount of time, but it is imaginable. For example, a three-person race between a left communist, a right nationalist, and a centrist candidate could end up eliminating the centrist candidate, but then both the communists and nationalists might be so scared of their opponents prevailing that some of their more moderate members team up with the centrist's supporters to choose a compromise president. That person might have received votes before and been eliminated, but is starting to look a lot better to a majority of the Congress than they did before. Or, that person might have never received votes, and is stepping in as a "white knight" candidate.
+</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+The twelfth, seventeenth, and twenty-third articles of amendment to the Constitution of the United States are hereby repealed.
+</span>
+<span class="details">
+The repeal of these amendments may not strictly be necessary, as the changes made in this amendment clearly supersede them, but it does "clean up" the Constitution somewhat. The twelfth amendment largely changes the electoral college process, but is no longer necessary as the electoral college has been abolished. Other provisions in the twelfth amendment have been superseded by the twentieth amendment, so they are also unnecessary. The seventeenth amendment deals with the direct election of senators and allows governors to fill senatorial vacancies. Neither of these are necessary given the above changes to the senate election process. The twenth-third amendment gives the District of Columbia a vote in the electoral college, which has been abolished, so this amendment as well is unnecessary. Given this amendment's changes, the District of Columbia will still have a say in presidential elections, but it also will now have a say in congressional elections, and this amendment does nothing to remove the statehood option.
+</span>
+</li>
+<li onclick="showDetails(this)">
+<span class="clause">
+This article shall first apply to the Congress commencing at least one year following its ratification, but any seats created by its enactment shall not be considered created until the commencement of that Congress.
+</span>
+<span class="details">
+The amendment can't apply immediately upon ratification, as the 3/4ths threshold may be met right at the end of a campaign season. Instead, this clause effectively causes a ratification during an election year to have delayed implementation. One year should be plenty of time to set up the processes necessary to implement this amendment, especially as the amendment's pending ratification will become obvious as the 3/4ths threshold is neared. The second part of this clause prevents newly created (and now-vacant) seats from being created without an intervening proportional election, such that a holdover non-proportionally elected House delegation could elect senators more to their liking, or House district boundaries could be hastily redrawn for a series of special elections.
+</span>
+</li>
+</ol>
+</body>
+</html>
