@@ -1,15 +1,22 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
     function showDetails(clickedElement) {
          clickedElement.classList.toggle("showDetails");
     }
     </script>
     <style>
+
+    @media screen and (min-width: 1024px) {
+        body{
+            width: 50em;
+        }
+    }
     body{
         font-size:larger;
-        margin-inline: 10em;
+        margin: auto;
     }
     li span.clause:hover{
         background-color: #ffff80;
@@ -22,7 +29,8 @@
         display: none;
         font-size:large;
         text-indent: 1em;
-        padding-left: 2em;
+        padding-left: 1em;
+        padding-right: 1em;
     }
     li.showDetails span.details{
         display: block;
