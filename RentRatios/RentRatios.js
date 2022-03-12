@@ -7,47 +7,97 @@ var tf = new TableFilter(document.querySelector('#homeTable'), {
 var zipCodeArray;
 
 function processLocationResponse(data) {
-    theResponse = JSON.parse(data.contents);
+    robotsResponseLeft = '<html><head><meta name=\"robots\"';
+    if (data.contents.startsWith(robotsResponseLeft)) {
+        alert("Zillow thinks you're a robot (they're kind of right). A new tab will open with a lot of text. Copy all of the text back into the text box that will pop up here.")
+        window.open(data.status.url, '_blank');
+        tabText = prompt("Please paste text from new tab", "");
+        processLocation(tabText);
+    } else {
+        processLocation(data.contents);
+    }
+}
+
+function tryMakeMap(lat, long) {
+    var mapZoom = 12 + Math.log2(scalar);
+    var latBase = parseFloat(document.getElementById("latitudeInput").value);
+    var longBase = parseFloat(document.getElementById("longitudeInput").value);
+
+    mapUrl = "https://tyler-demo.herokuapp.com/?greyscale=False&lat=" + latBase + "&lon=" + longBase + "&zoom=" + mapZoom + "&width=800&height=800";
+    document.getElementById("mapImg").src=mapUrl;
+}
+
+function updateMarkers() {
+    var dotContainer = document.getElementById("dotContainer")
+    var tbodyObject = document.getElementById("homeTable").getElementsByTagName("tbody")[0]
+
+    var latBase = parseFloat(document.getElementById("latitudeInput").value);
+    var longBase = parseFloat(document.getElementById("longitudeInput").value);
+    mapLatScalar = .222276/.2; //the map uses a zoom level, doesn't correspond to the zillow rectangle, so adjust - not right everywhere
+    mapLongScalar = .273202/.2;
+    var latSpread = .1/scalar * mapLatScalar;
+    var longSpread = .1/scalar * mapLongScalar;
+
+    mapLatMax = latBase + latSpread;
+    mapLatMin = latBase - latSpread;
+    mapLongMax = longBase + longSpread;
+    mapLongMin = longBase - longSpread;
+    dotContainerInnerHtml = ""
+    Array.from(tbodyObject.children).forEach(function (eachRow) {
+        if(eachRow.style.display != "none") {
+            topPercent = 100 - 100*(eachRow.getAttribute("lat") - mapLatMin)/(mapLatMax - mapLatMin) + "%"
+            leftPercent = 100*(eachRow.getAttribute("long") - mapLongMin)/(mapLongMax - mapLongMin) + "%"
+            dotContainerInnerHtml = dotContainerInnerHtml + "<span class=\"dot\" style=\"top: " + topPercent +";left: "+leftPercent+";\"></span>";
+        }
+    });
+    dotContainer.innerHTML = dotContainerInnerHtml;
+}
+
+function processLocation(contents) {
+    theResponse = JSON.parse(contents);
     searchResults = theResponse.cat2.searchResults.mapResults.concat(theResponse.cat2.searchResults.listResults);
     totalResults = 0;
     skippedResults = 0;
     if (searchResults.length < 500) {
-    searchResults.forEach(function (eachResult) {
-        totalResults++;
-        homeLink = "";
-        if (eachResult.detailUrl.includes("www.zillow.com")) {
-          homeLink = eachResult.detailUrl;
-        } else {
-          homeLink = "https://www.zillow.com" + eachResult.detailUrl;
-        }
-        homeAddress = homeLink.split('/')[4].split('-').join(' ');
-        hdpData = eachResult.hdpData;
-        if (hdpData != undefined) {
-            homeData = hdpData.homeInfo;
-            //homeAddress = homeData.streetAddress + " " + homeData.city;
-            foreclosure = homeData.homeStatus == "PRE_FORECLOSURE";
-            priceReduction = homeData.priceReduction;
-            salePrice = homeData.priceForHDP;
-            zestimate = homeData.zestimate;
-            rentalZestimate = homeData.rentZestimate;
-            saleRatio = "";
-            if (zestimate != "" && salePrice != "") {
-                saleRatio = Math.round(salePrice / zestimate * 100) / 100;
+        tryMakeMap();
+        searchResults.forEach(function (eachResult) {
+            totalResults++;
+            homeLink = "";
+            if (eachResult.detailUrl.includes("www.zillow.com")) {
+                homeLink = eachResult.detailUrl;
+            } else {
+                homeLink = "https://www.zillow.com" + eachResult.detailUrl;
             }
-            rentRatio = "";
-            if (rentalZestimate != "" && salePrice != "") {
-                rentRatio = Math.round(salePrice / rentalZestimate);
+            homeAddress = homeLink.split('/')[4].split('-').join(' ');
+            homeLat = eachResult.latLong.latitude;
+            homeLong = eachResult.latLong.longitude;
+            hdpData = eachResult.hdpData;
+            if (hdpData != undefined) {
+                homeData = hdpData.homeInfo;
+                //homeAddress = homeData.streetAddress + " " + homeData.city;
+                foreclosure = homeData.homeStatus == "PRE_FORECLOSURE";
+                priceReduction = homeData.priceReduction;
+                salePrice = homeData.priceForHDP;
+                zestimate = homeData.zestimate;
+                rentalZestimate = homeData.rentZestimate;
+                saleRatio = "";
+                if (zestimate != "" && salePrice != "") {
+                    saleRatio = Math.round(salePrice / zestimate * 100) / 100;
+                }
+                rentRatio = "";
+                if (rentalZestimate != "" && salePrice != "") {
+                    rentRatio = Math.round(salePrice / rentalZestimate);
+                }
+                homeType = homeData.homeType;
+                addHome(homeAddress, homeLat, homeLong, homeType, foreclosure, priceReduction, salePrice, zestimate, rentalZestimate, saleRatio, rentRatio, homeLink);
+            } else {
+                skippedResults++;
+                //alert("here");
             }
-            homeType = homeData.homeType;
-            addHome(homeAddress, homeType, foreclosure, priceReduction, salePrice, zestimate, rentalZestimate, saleRatio, rentRatio, homeLink);
-        } else {
-            skippedResults++;
-            //alert("here");
-        }
-    });
-    tf.init();
-    alert("Processed " + totalResults + " results, of which " + skippedResults + " were skipped for lack of data.");
-    tf.filter();
+        });
+        tf.init();
+        alert("Processed " + totalResults + " results, of which " + skippedResults + " were skipped for lack of data.");
+        tf.filter();
     }else{
         scalar *= 2;
         updateResults();
@@ -71,8 +121,10 @@ function updateResults() {
     $.getJSON(jsonRequestString, processLocationResponse);
 }
 
-function addHome(address, homeType, foreclosure, priceReduction, salePrice, zestimate, rentZestimate, saleRatio, rentRatio, link) {
+function addHome(address, homeLat, homeLong, homeType, foreclosure, priceReduction, salePrice, zestimate, rentZestimate, saleRatio, rentRatio, link) {
     var newRow = document.createElement("tr");
+    newRow.setAttribute("lat",homeLat);
+    newRow.setAttribute("long", homeLong);
     newRow.innerHTML = "<td>" + address + "</td><td>" + homeType + "</td><td>" + foreclosure + "</td><td>" + priceReduction + "</td><td>" + salePrice + "</td><td>" + zestimate + "</td><td>" + rentZestimate + "</td><td>" + saleRatio + "</td><td>" + rentRatio + "</td><td><a target=\"_blank\" href=\"" + link + "\"/>Link</td>";
     var theTable = document.getElementById("homeTable").getElementsByTagName("tbody")[0];
     theTable.appendChild(newRow);

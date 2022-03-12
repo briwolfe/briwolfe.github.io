@@ -12,6 +12,21 @@
           padding: 10px;
           text-align: left;
         }
+        #mapContainer {
+          width: 100%;
+          max-width: 800px;
+          position: relative;
+        }
+        .dot {
+          height: 10px;
+          width: 10px;
+          background-color: #f00;
+          border-radius: 50%;
+          display: inline-block;
+          position: absolute;
+          z-index: 2;
+          transform: translate(-50%, -50%);
+        }
         /*tr:nth-child(even) {
           background-color: #eee;
         }
@@ -34,8 +49,13 @@
             <br>
             <input id="longitudeInput" value="-92.15365" />
         </div>
+        <div id="mapContainer">
+            <img id="mapImg" src=""/>
+            <div id="dotContainer">
+            </div>
+        </div>
         <div id="homesList">
-            <table id="homeTable">
+            <table id="homeTable" onchange="updateMarkers()">
                 <thead>
                     <tr>
                         <th>Address</th>
