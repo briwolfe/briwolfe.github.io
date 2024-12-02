@@ -1,23 +1,12 @@
-﻿nhlApiUrl = "https://statsapi.web.nhl.com"
-
-
-// everytime we call a function, we increment ajaxCallsOustanding
-// and here, when we get them back, we decrement
-// this serves to make sure we're not updating every time we get something back
+﻿nhlApiUrl = "https://api-web.nhle.com"
 
 var loadScoreboard = function(nhlReturnVal)
 {
-    ajaxCallsOutstanding--;
     parseGames(nhlReturnVal);
-    if (ajaxCallsOutstanding == 0)
-        printGoodGames();
 }
 
 var loadGame = function (nhlReturnVal) {
-    ajaxCallsOutstanding--;
     isCloseGame(nhlReturnVal);
-    if (ajaxCallsOutstanding == 0)
-        printGoodGames();
 }
 
 Date.prototype.toDateInputValue = (function () {
@@ -32,7 +21,6 @@ $(document).ready(function () {
 
 var allGames;
 var goodGames;
-var ajaxCallsOutstanding = 0;
 
 var getGames = function ()
 {
@@ -45,7 +33,7 @@ var getGames = function ()
         setErrorMessage("Please select a valid date.");
         return;
     }
-    ajaxURL = nhlApiUrl + "/api/v1/schedule?date=" + ymd;
+    ajaxURL = nhlApiUrl + "/v1/score/" + ymd;
     doAjaxCall(ajaxURL, loadScoreboard);
     
 }
@@ -53,21 +41,16 @@ var getGames = function ()
 var parseGames = function(nhlReturnVal)
 {
     allGames = nhlReturnVal;
-    if (allGames == undefined) {
+    if (allGames == undefined || allGames.games == undefined) {
         setErrorMessage("Unable to parse result.");
     }
-    else if (allGames.totalGames == 0 ) {
-        setErrorMessage("No games scheduled on selected date.")
-    }
-    else if (allGames.dates == undefined || allGames.dates[0] == undefined || allGames.dates[0].games == undefined) {
-        setErrorMessage("Unable to parse result.");
-    }
-    else if (allGames.dates[0].games.length == 0) {
+    else if (allGames.games.length == 0 ) {
         setErrorMessage("No games scheduled on selected date.")
     }
     else {
-        findGoodGames(allGames.dates[0].games);
+        findGoodGames(allGames.games);
     }
+    printGoodGames();
 }
 
 var findGoodGames = function(theGames)
@@ -90,7 +73,7 @@ var findGoodGames = function(theGames)
 
 var isFinal = function(hockeyGame)
 {
-    if (hockeyGame.status.abstractGameState == "Final")
+    if (hockeyGame.gameState == "OFF")
         return true;
     else
         return false;
@@ -102,36 +85,34 @@ var getGameData = function (hockeyGame)
     if (!isFinal(hockeyGame))
         // only want completed games, would be enhancement for live games
         return;
-
-    var gameURL = nhlApiUrl + hockeyGame.link;
-    doAjaxCall(gameURL, loadGame)
+    loadGame(hockeyGame);
 
 }
 
 // a game is defined as close (really more like good ending) if tied within the last five minutes or 1 goal lead within the last two minutes
 var isCloseGame = function (gameDetails) {
     var closeGame = false;
-    var scoringPlays = gameDetails.liveData.plays.scoringPlays;
+    var scoringPlays = gameDetails.goals;
     var scores = {};
     var lead = 0;
     var homeScore = 0;
     var awayScore = 0;
     scoringPlays.forEach(function (scoringPlay) {
-        var specificPlay = gameDetails.liveData.plays.allPlays[scoringPlay];
+        var specificPlay = scoringPlay;
         if (specificPlay == undefined) return;
-        homeScore = specificPlay.about.goals.home;
-        awayScore = specificPlay.about.goals.away;
+        homeScore = specificPlay.homeScore;
+        awayScore = specificPlay.awayScore;
         if (closeGame) return; // already close, don't care anymore
         var prevLead = lead;
 
         lead = Math.abs(homeScore - awayScore);
 
-        if (specificPlay.about.period < 3) return; // only care about 3rd period specifics, otherwise the one-goal check works
+        if (specificPlay.period < 3) return; // only care about 3rd period specifics, otherwise the one-goal check works
             
         // only here if 3rd period
-        var timeRemainingArray = specificPlay.about.periodTimeRemaining.split(":");
-        var timeRemaining = 60 * parseInt(timeRemainingArray[0]) + parseInt(timeRemainingArray[1]);
-        if (timeRemaining < 5 * 60) // less than 5 minutes left in 3rd
+        var timeInPeriodArray = specificPlay.timeInPeriod.split(":");
+        var timeInPeriod = 60 * parseInt(timeInPeriodArray[0]) + parseInt(timeInPeriodArray[1]);
+        if (timeInPeriod > 15 * 60) // less than 5 minutes left in 3rd
         {
             // check for tie game
             if (prevLead == 0 || lead == 0)
@@ -139,7 +120,7 @@ var isCloseGame = function (gameDetails) {
                 closeGame = true;
                 return;
             }
-            if (timeRemaining < 2 * 60) // less than 2 minutes left in 3rd
+            if (timeInPeriod > 18 * 60) // less than 2 minutes left in 3rd
             {
                 // check for 1 goal lead
                 if (prevLead == 1 || lead == 1)
@@ -160,8 +141,8 @@ var isCloseGame = function (gameDetails) {
     if (closeGame)
     {
         var simpleGameInfo = {
-            home: gameDetails.gameData.teams.home.shortName,
-            away: gameDetails.gameData.teams.away.shortName,
+            home: gameDetails.homeTeam.abbrev,
+            away: gameDetails.awayTeam.abbrev,
             homeScore: homeScore,
             awayScore: awayScore,
         }
@@ -182,6 +163,7 @@ var printGoodGames = function()
     shuffle(goodGames);
 
     var uiList = $("#goodGamesList");
+    uiList.empty();
     goodGames.forEach(function (goodGame) {
         var newDiv = "<div>" + goodGame.away + " @ " + goodGame.home + "<//div>";
         uiList.append(newDiv);
@@ -217,7 +199,7 @@ var doAjaxCall = function (url, callback) {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: url,
+        url: useCorsProxy(url),
         error: function (jqXHR, exception) {
             var msg = '';
             if (jqXHR.status === 200) {
@@ -232,5 +214,8 @@ var doAjaxCall = function (url, callback) {
             setErrorMessage(msg);
         },
     }).done(function (data) { callback(data) })
-    ajaxCallsOutstanding++;
+}
+
+var useCorsProxy = function(url) {
+    return "https://corsproxy.io/?"+ encodeURI(url);
 }
